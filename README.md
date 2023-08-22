@@ -1,22 +1,22 @@
-# Logger
+# Loggerw
 
-[![pub package](https://img.shields.io/pub/v/logger.svg?logo=dart&logoColor=00b9fc)](https://pub.dartlang.org/packages/logger)
-[![CI](https://img.shields.io/github/actions/workflow/status/Bungeefan/logger/dart.yml?branch=master&logo=github-actions&logoColor=white)](https://github.com/Bungeefan/logger/actions)
-[![Last Commits](https://img.shields.io/github/last-commit/Bungeefan/logger?logo=git&logoColor=white)](https://github.com/Bungeefan/logger/commits/master)
-[![Pull Requests](https://img.shields.io/github/issues-pr/Bungeefan/logger?logo=github&logoColor=white)](https://github.com/Bungeefan/logger/pulls)
-[![Code size](https://img.shields.io/github/languages/code-size/Bungeefan/logger?logo=github&logoColor=white)](https://github.com/Bungeefan/logger)
-[![License](https://img.shields.io/github/license/Bungeefan/logger?logo=open-source-initiative&logoColor=green)](https://github.com/Bungeefan/logger/blob/master/LICENSE)
+[![pub package](https://img.shields.io/pub/v/loggerw.svg?logo=dart&logoColor=00b9fc)](https://pub.dev/packages/loggerw)
+[![CI](https://img.shields.io/github/actions/workflow/status/marcelofeitoza/loggerw/dart.yml?branch=master&logo=github-actions&logoColor=white)](https://github.com/marcelofeitoza/loggerw/actions)
+[![Last Commits](https://img.shields.io/github/last-commit/marcelofeitoza/loggerw?logo=git&logoColor=white)](https://github.com/marcelofeitoza/loggerw/commits/master)
+[![Pull Requests](https://img.shields.io/github/issues-pr/marcelofeitoza/loggerw?logo=github&logoColor=white)](https://github.com/marcelofeitoza/loggerw/pulls)
+[![Code size](https://img.shields.io/github/languages/code-size/marcelofeitoza/loggerw?logo=github&logoColor=white)](https://github.com/marcelofeitoza/loggerw)
+[![License](https://img.shields.io/github/license/marcelofeitoza/loggerw?logo=open-source-initiative&logoColor=green)](https://github.com/marcelofeitoza/loggerw/blob/master/LICENSE)
 
-Small, easy to use and extensible logger which prints beautiful logs.<br>
+Small, easy to use and extensible fork of logger which prints beautiful logs and records them into your API of choice.<br>
 Inspired by [logger](https://github.com/orhanobut/logger) for Android.
 
 **Show some ❤️ and star the repo to support the project**
 
 ### Resources:
 
-- [Documentation](https://pub.dev/documentation/logger/latest/logger/logger-library.html)
-- [Pub Package](https://pub.dev/packages/logger)
-- [GitHub Repository](https://github.com/Bungeefan/logger)
+-   [Documentation](https://pub.dev/documentation/loggerw/latest/loggerw/logger-library.html)
+-   [Pub Package](https://pub.dev/packages/loggerw)
+-   [GitHub Repository](https://github.com/marcelofeitoza/loggerw)
 
 ## Getting Started
 
@@ -32,7 +32,7 @@ Instead of a string message, you can also pass other objects like `List`, `Map` 
 
 ## Output
 
-![](https://raw.githubusercontent.com/Bungeefan/logger/master/art/screenshot.png)
+![](https://raw.githubusercontent.com/marcelofeitoza/loggerw/master/art/screenshot.png)
 
 # Documentation
 
@@ -71,6 +71,7 @@ var logger = Logger(
   filter: null, // Use the default LogFilter (-> only log in debug mode)
   printer: PrettyPrinter(), // Use the PrettyPrinter to format and print log
   output: null, // Use the default LogOutput (-> send everything to console)
+  apiURL: "${dotenv.env['API_URL']}/logs", // Optional: API URL to send logs
 );
 ```
 
@@ -86,6 +87,20 @@ var logger = Logger(
       printEmojis: true, // Print an emoji for each log message
       printTime: false // Should each log print contain a timestamp
   ),
+  apiURL: "${dotenv.env['API_URL']}/logs", // Optional: API URL to send logs
+);
+```
+
+## Sending Logs to API
+
+Now you can send logs to a specified API URL using the `Logger` class. The new optional parameter `apiURL` allows you to provide the URL to which log information will be sent.
+
+```dart
+var logger = Logger(
+  filter: null,
+  printer: PrettyPrinter(),
+  output: null,
+  apiURL: "${dotenv.env['API_URL']}/logs", // Optional: API URL to send logs
 );
 ```
 
@@ -102,6 +117,7 @@ import `io`, for example when using this library on the web.
 ## LogFilter
 
 The `LogFilter` decides which log events should be shown and which don't.<br>
+
 The default implementation (`DevelopmentFilter`) shows all logs with `level >= Logger.level` while
 in debug mode.
 In release mode all logs are omitted.
@@ -115,7 +131,7 @@ class MyFilter extends LogFilter {
     return true;
   }
 }
-```
+````
 
 This will show all logs even in release mode. (**NOT** a good idea)
 
@@ -179,4 +195,4 @@ requests.
 
 # Acknowledgments
 
-This package was originally created by [Simon Choi](https://github.com/simc).
+This package was originally created by [Simon Choi](https://github.com/simc) and later forked and modified by [Marcelo Feitoza](http://github.com/marcelofeitoza).

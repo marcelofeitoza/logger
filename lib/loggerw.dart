@@ -1,5 +1,5 @@
 /// Small, easy to use and extensible logger which prints beautiful logs.
-library logger;
+library loggerw;
 
 export 'src/ansi_color.dart';
 export 'src/filters/development_filter.dart';

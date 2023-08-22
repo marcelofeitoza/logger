@@ -1,4 +1,4 @@
-name: logger
+name: loggerw
 description: Small, easy to use and extensible fork of logger which prints beautiful logs and records them into your API of choice.
 version: 1.0.0
 repository: https://github.com/marcelofeitoza/logger

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:logger/logger.dart';
+import 'package:loggerw/loggerw.dart';
 import 'package:test/test.dart';
 
 void main() {

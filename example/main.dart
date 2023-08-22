@@ -1,4 +1,4 @@
-import 'package:logger/logger.dart';
+import 'package:loggerw/loggerw.dart';
 
 var logger = Logger(
   printer: PrettyPrinter(),

@@ -1,9 +1,9 @@
-import 'package:logger/src/filters/development_filter.dart';
-import 'package:logger/src/printers/pretty_printer.dart';
-import 'package:logger/src/outputs/console_output.dart';
-import 'package:logger/src/log_printer.dart';
-import 'package:logger/src/log_output.dart';
-import 'package:logger/src/log_filter.dart';
+import 'package:loggerw/src/filters/development_filter.dart';
+import 'package:loggerw/src/printers/pretty_printer.dart';
+import 'package:loggerw/src/outputs/console_output.dart';
+import 'package:loggerw/src/log_printer.dart';
+import 'package:loggerw/src/log_output.dart';
+import 'package:loggerw/src/log_filter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
