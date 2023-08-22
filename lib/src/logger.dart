@@ -86,21 +86,24 @@ class Logger {
   final LogPrinter _printer;
   final LogOutput _output;
   bool _active = true;
+  final String? apiURL; // Add this instance variable
 
   /// Create a new instance of Logger.
   ///
   /// You can provide a custom [printer], [filter], [output] and [level].
   /// If no custom [printer] is provided, [PrettyPrinter] is used.
   /// If no custom [filter] is provided, [DevelopmentFilter] is used.
-  Logger(
-      {LogFilter? filter,
-      LogPrinter? printer,
-      LogOutput? output,
-      Level? level,
-      String? apiUrl})
-      : _filter = filter ?? defaultFilter(),
+  Logger({
+    LogFilter? filter,
+    LogPrinter? printer,
+    LogOutput? output,
+    Level? level,
+    String? apiUrl, // Add apiUrl as a constructor parameter
+  })  : _filter = filter ?? defaultFilter(),
         _printer = printer ?? defaultPrinter(),
-        _output = output ?? defaultOutput() {
+        _output = output ?? defaultOutput(),
+        apiURL = apiUrl {
+    // Store apiUrl as an instance variable
     _filter.init();
     _filter.level = level ?? Logger.level;
     _printer.init();
@@ -199,7 +202,6 @@ class Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-    String? apiURL, // New parameter to accept API URL
   }) async {
     if (!_active) {
       throw ArgumentError('Logger has already been closed.');
@@ -242,6 +244,7 @@ class Logger {
       }
 
       // Perform a POST request to the specified API URL
+      // Perform a POST request to the stored API URL
       if (apiURL != null) {
         await _sendLogToApi(
           level: level,
@@ -249,7 +252,6 @@ class Logger {
           time: time,
           error: error,
           stackTrace: stackTrace,
-          apiURL: apiURL,
         );
       }
     }
@@ -261,11 +263,15 @@ class Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-    required String apiURL,
   }) async {
+    if (apiURL == null) {
+      print('API URL not provided. Cannot send log to API.');
+      return;
+    }
+
     try {
       final response = await http.post(
-        Uri.parse(apiURL),
+        Uri.parse(apiURL!),
         body: jsonEncode({
           'level': level.toString(),
           'message': message.toString(),
