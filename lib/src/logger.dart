@@ -269,18 +269,26 @@ class Logger {
       return;
     }
 
+    var object = {
+      'level': level.toString().split('.').last.toUpperCase(),
+      'message': message.toString(),
+      'time': time?.toIso8601String(),
+      'error': error?.toString().replaceAll('\n', ' '),
+      'stackTrace': stackTrace?.toString()
+    };
+
+    print('Sending log to API: $object');
+
     try {
       final response = await http.post(
         Uri.parse(apiURL!),
-        body: jsonEncode({
-          'level': level.toString(),
-          'message': message.toString(),
-          'time': time?.toIso8601String(),
-          'error': error?.toString(),
-          'stackTrace': stackTrace?.toString(),
-        }),
+        body: jsonEncode(object),
         headers: {'Content-Type': 'application/json'},
       );
+
+      print('API Response Status Code: ${response.statusCode}');
+      print('API Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         print('Log successfully sent to API');
       } else {
