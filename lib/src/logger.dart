@@ -1,9 +1,11 @@
 import 'package:logger/src/filters/development_filter.dart';
-import 'package:logger/src/log_filter.dart';
-import 'package:logger/src/log_output.dart';
-import 'package:logger/src/log_printer.dart';
-import 'package:logger/src/outputs/console_output.dart';
 import 'package:logger/src/printers/pretty_printer.dart';
+import 'package:logger/src/outputs/console_output.dart';
+import 'package:logger/src/log_printer.dart';
+import 'package:logger/src/log_output.dart';
+import 'package:logger/src/log_filter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 /// [Level]s to control logging output. Logging can be enabled to include all
 /// levels above certain [Level].
@@ -87,15 +89,16 @@ class Logger {
 
   /// Create a new instance of Logger.
   ///
-  /// You can provide a custom [printer], [filter] and [output]. Otherwise the
-  /// defaults: [PrettyPrinter], [DevelopmentFilter] and [ConsoleOutput] will be
-  /// used.
-  Logger({
-    LogFilter? filter,
-    LogPrinter? printer,
-    LogOutput? output,
-    Level? level,
-  })  : _filter = filter ?? defaultFilter(),
+  /// You can provide a custom [printer], [filter], [output] and [level].
+  /// If no custom [printer] is provided, [PrettyPrinter] is used.
+  /// If no custom [filter] is provided, [DevelopmentFilter] is used.
+  Logger(
+      {LogFilter? filter,
+      LogPrinter? printer,
+      LogOutput? output,
+      Level? level,
+      String? apiUrl})
+      : _filter = filter ?? defaultFilter(),
         _printer = printer ?? defaultPrinter(),
         _output = output ?? defaultOutput() {
     _filter.init();
@@ -196,7 +199,8 @@ class Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-  }) {
+    String? apiURL, // New parameter to accept API URL
+  }) async {
     if (!_active) {
       throw ArgumentError('Logger has already been closed.');
     } else if (error != null && error is StackTrace) {
@@ -236,6 +240,48 @@ class Logger {
           print(s);
         }
       }
+
+      // Perform a POST request to the specified API URL
+      if (apiURL != null) {
+        await _sendLogToApi(
+          level: level,
+          message: message,
+          time: time,
+          error: error,
+          stackTrace: stackTrace,
+          apiURL: apiURL,
+        );
+      }
+    }
+  }
+
+  Future<void> _sendLogToApi({
+    required Level level,
+    required dynamic message,
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    required String apiURL,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(apiURL),
+        body: jsonEncode({
+          'level': level.toString(),
+          'message': message.toString(),
+          'time': time?.toIso8601String(),
+          'error': error?.toString(),
+          'stackTrace': stackTrace?.toString(),
+        }),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        print('Log successfully sent to API');
+      } else {
+        print('Failed to send log to API');
+      }
+    } catch (e) {
+      print('Error sending log to API: $e');
     }
   }
 
