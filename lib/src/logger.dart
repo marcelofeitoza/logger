@@ -277,17 +277,12 @@ class Logger {
       'stackTrace': stackTrace?.toString()
     };
 
-    print('Sending log to API: $object');
-
     try {
       final response = await http.post(
         Uri.parse(apiURL!),
         body: jsonEncode(object),
         headers: {'Content-Type': 'application/json'},
       );
-
-      print('API Response Status Code: ${response.statusCode}');
-      print('API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         print('Log successfully sent to API');
